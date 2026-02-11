@@ -1,0 +1,49 @@
+# =============================================================================
+# Cloudflare Tunnel Configuration
+# =============================================================================
+# This is a sample configuration for cloudflared.
+# When using Docker, the TUNNEL_TOKEN environment variable is preferred.
+# =============================================================================
+
+# Tunnel credentials (optional when using TUNNEL_TOKEN env var)
+# credentials-file: /etc/cloudflared/credentials.json
+# tunnel: your-tunnel-id
+
+# Ingress rules - map hostnames to local services
+ingress:
+  # Main application
+  - hostname: app.example.com
+    service: http://nginx:80
+    originRequest:
+      noTLSVerify: true
+      httpHostHeader: app.example.com
+
+  # API endpoint (optional - can also route through nginx)
+  - hostname: api.example.com
+    service: http://backend:3001
+    originRequest:
+      noTLSVerify: true
+      httpHostHeader: api.example.com
+
+  # Admin panel (optional)
+  - hostname: admin.example.com
+    service: http://nginx:80
+    originRequest:
+      noTLSVerify: true
+      httpHostHeader: admin.example.com
+
+  # Catch-all (required)
+  - service: http_status:404
+
+# Warp routing (optional)
+# warp-routing:
+#   enabled: true
+
+# Protocol settings
+protocol: auto
+
+# Logging
+loglevel: info
+
+# Metrics
+metrics: 0.0.0.0:45678
